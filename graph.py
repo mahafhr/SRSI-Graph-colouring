@@ -53,12 +53,10 @@ class Graph():
                 return False
         return True
 
-    def is_complete(self):
-        for j in range(1, self.order()+1):
-            if self.edge_cnt==0:
-                return False
+  def is_complete(self):
+        if self.edge_cnt==0:
+             return False
         return True
-
 
 g = Graph(10)
 g.add_edge(1,2)
