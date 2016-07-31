@@ -1,3 +1,5 @@
+import igraph
+
 # Graph data structure
 
 class Graph():
@@ -57,6 +59,17 @@ class Graph():
             return False
         return True
 
+    def draw(self):
+        g = igraph.Graph()
+        g.add_vertices(self.order())
+        for v in range(1, self.order()+1):
+            for w in range(v+1, self.order()+1):
+                if w in self.edge_list[v]:
+                    g.add_edge(v-1, w-1)
+        layout = g.layout("kk")
+        igraph.plot(g, layout = layout)
+
+
 g = Graph(10)
 g.add_edge(1,2)
 g.add_edge(1,3)
@@ -64,3 +77,4 @@ g.print_graph()
 g.add_edge(11,1)
 g.is_empty()
 g.is_complete()
+g.draw()
