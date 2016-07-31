@@ -48,7 +48,6 @@ class Graph():
             self.edge_cnt= self.edge_cnt-1
 
     def is_empty(self):
-        for j in range(1, self.order()+1):
             if self.edge_cnt!=0:
                 return False
         return True
