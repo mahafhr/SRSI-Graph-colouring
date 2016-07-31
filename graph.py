@@ -49,12 +49,12 @@ class Graph():
 
     def is_empty(self):
         if self.edge_cnt!=0:
-                return False
+            return False
         return True
 
-  def is_complete(self):
+    def is_complete(self):
         if self.edge_cnt==0:
-             return False
+            return False
         return True
 
 g = Graph(10)
