@@ -55,9 +55,9 @@ class Graph():
         return True
 
     def is_complete(self):
-        if self.edge_cnt==0:
-            return False
-        return True
+        if self.edge_cnt==self.order()*(self.order()-1)/2:
+            return True
+        return False
 
     def draw(self):
         g = igraph.Graph()
