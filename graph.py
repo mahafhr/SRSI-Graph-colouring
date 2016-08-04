@@ -128,6 +128,5 @@ g.colour_count()
 #g.is_empty()
 #g.is_complete()
 #g.naive_colouring()
-# g.greedy_algorithm()
 
 # g.draw()
