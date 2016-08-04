@@ -79,20 +79,21 @@ class Graph():
         colour_set = set(self.vertex_colour.values()) # colours are a set to remove duplicates, then it gets the len
         print (len(colour_set))
 
-    def greedy_algo(self):
+      def greedy_algo(self):
+        """colours graph using the greedy algorithm"""
         for v in range(1, self.order() + 1):
             nb = list(self.vertex_list[v])        # place the neighbours in a list
             colour = {}                           # empty colour dict
             for i in range(1, self.order() + 1):  # loop to set all colours to be available
                 colour[i] = True
-                                                  # loop checks if all the vertex neighbours have a colour, if they do, they are false
-            for i in range(0, len(nb)):
-                nb_colour = self.vertex_colour[nb[i]]
+            # loop checks if all the vertex neighbours have a colour, if they do, the colour is “false” (unavailable)
+            for x in nb:
+                nb_colour = self.vertex_colour[x]
                 if nb_colour != 0:                # if the neighbour has a colour
                     colour[nb_colour] = False     # change the colour to be not available
                                                   # loop to find the first available colour so we will loop till we find the first true
             for i in range(1, len(colour) + 1):   # find the first available colour
-                if colour[i] == True:
+                if colour[i] is True:
                     self.vertex_colour[v] = i
                     break
 
