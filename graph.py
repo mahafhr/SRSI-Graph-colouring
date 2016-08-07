@@ -62,22 +62,25 @@ class Graph():
             return True
         return False
 
-    #def naive_colouring(self):
+      #def naive_colouring(self):
         #### random colours but can have duplicates
         #for k in range(1, self.order() + 1):
-            #self.colour_list[k]=random.randint(0, self.order())
+            #self.vertex_colour[k]=random.randint(0, self.order())
 
-        #### colour list is added in order from 1 to vertex's number then values are shuffled (no duplicate colours)
+        #### vertex colour is added in order from 1 to vertex's number then values are shuffled (no duplicate colours)
         # for k in range(1, self.order() + 1):
-        #     self.colour_list[k] = k
+        #     self.vertex_colour[k] = k
         # values = list( )
         # random.shuffle(values)
-        # self.colour_list= dict(zip(self.colour_list.keys(), values))
-        # print (self.colour_list)
+        # self.vertex_colour= dict(zip(self.vertex_colour.keys(), values))
+        # print (self.vertex_colour)
 
-    def colour_count(self):
-        colour_set = set(self.vertex_colour.values()) # colours are a set to remove duplicates, then it gets the len
-        print (len(colour_set))
+    def colour_count(self): #need to set colour count as 0 when the graph is uncoloured
+        if self.vertex_colour[1] == 0:
+            return 0
+        else:
+            colour_set = set(self.vertex_colour.values()) # colours are a set to remove duplicates, then it gets the len
+            return (len(colour_set))
 
       def greedy_algo(self):
         """colours graph using the greedy algorithm"""
