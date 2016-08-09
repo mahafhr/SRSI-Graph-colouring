@@ -122,11 +122,11 @@ class Graph():
                     self.vertex_colour[v[j]] = i
                     break
 
-    def random_graph(self):
+    def random_graph(self، p):
         self.clear()
         for v1 in range(1, self.graph_size + 1):
-            for v2 in range(1, self.graph_size + 1):
-                if v1 != v2 and random.random() >0.5:
+            for v2 in range(v1, self.graph_size + 1):
+                if v1 != v2 and random.random() < p:
                     self.add_edge(v1,v2)
 
 
@@ -160,7 +160,7 @@ class Graph():
     #                 g.add_edge(v - 1, w - 1)
     #     layout = g.layout("kk")
     #     igraph.plot(g, layout=layout)
-g = Graph(1000)
+g = Graph(100)
 # g.add_edge(1,3)
 # g.add_edge(1,2)
 # g.add_edge(2,1)
@@ -178,14 +178,11 @@ g = Graph(1000)
 #g.is_complete()
 # g.draw()
 
-g.random_graph()
+g.random_graph(0.3)
 
 g.greedy_algo("l")
-g.print_graph()
 print("colour count", g.colour_count())
 g.greedy_algo("h")
-g.print_graph()
 print("colour count", g.colour_count())
 g.greedy_algo2()
-g.print_graph()
 print("colour count", g.colour_count())
