@@ -3,11 +3,10 @@ import collections
 import igraph
 import operator
 from operator import itemgetter
-class Graph():
-    # edge_list = 0 (Do we need this?)
+class graph():
     def __init__(self, n):
         self.graph_size = n
-        self.edge_list = {}      # a dictionary whose keys are the vertices and the values are the set of adjacent vertices
+        self.edge_list = {}      # a dictionary where keys are the vertices and the values are the set of neighbours
         self.edge_cnt = 0        # number of edges
         self.vertex_colour = {}
         self.vertex_degree = {}
@@ -24,10 +23,10 @@ class Graph():
         elif a != b:
             self.edge_list[a].add(b)
             self.edge_list[b].add(a)
-            self.edge_cnt=self.edge_cnt+1
-            # print ("edge between",a,"and",b,"added")
+            self.edge_cnt = self.edge_cnt + 1
 
     def print_graph(self):
+        """Print graph to console"""
         if self.is_empty():
             print ("Graph is empty!")
         else:
@@ -35,31 +34,39 @@ class Graph():
                     print ("vertex",j, "neighbours", self.edge_list[j],"colour",self.vertex_colour[j])
 
     def clear(self):
-        for j in range(1, self.order()+1):  #to clear sets (edges)
+        """Clear sets (edges)"""
+        for j in range(1, self.order()+1):
             self.edge_list[j].clear()
         self.edge_cnt=0
 
     def order(self):
-        return len(self.edge_list)       #returns the number of vertices in the graph
+        """Return the number of vertices in the graph"""
+        return len(self.edge_list)
 
     def size(self):
-        return self.edge_cnt               #returns the number of edges in the graph
+        """Return the number of edges in the graph"""
+        return self.edge_cnt
 
-    def remove_edge(self, a, b):           #removes an edge
+    def remove_edge(self, a, b):
+        """remove an edge"""
         if b in self.edge_list[a]:
             self.edge_list[a].remove(b)
             self.edge_list[b].remove(a)
-            self.edge_cnt= self.edge_cnt-1
+            self.edge_cnt = self.edge_cnt - 1
 
     def is_empty(self):
+        """Check if the graph is empty"""
         if self.edge_cnt!=0:
             return False
         return True
 
     def is_complete(self):
+        """Check if the graph is complete (all vertices are connected to each other)"""
         if self.edge_cnt==self.order()*(self.order()-1)/2:
             return True
         return False
+
+
 
     #def naive_colouring(self):
         #### random colours but can have duplicates
@@ -75,6 +82,7 @@ class Graph():
         # print (self.vertex_colour)
 
     def colour_count(self):
+        """Count colours in the graph"""
         if self.vertex_colour[1] == 0:
             return 0
         else:
@@ -83,7 +91,7 @@ class Graph():
 
 
     def degree_lowest(self):
-        """arranges a dict of vertices and edges starting from the lowest degree"""
+        """Arrange a dict of vertices and edges starting from the lowest degree"""
         vertex_degree={}
         for v in range(1, self.order() + 1):
             vertex_degree[v] = len(self.edge_list[v])
@@ -94,17 +102,28 @@ class Graph():
         return order_lowest
 
     def degree_highest(self):
+        """Order the vertices by highest degree"""
         l = self.degree_lowest()
         l.reverse()
         return l
 
+    def is_proper(self):
+        for vertex in range(1, self.graph_size + 1):
+            for neighbour in self.edge_list[vertex]:
+                if self.vertex_colour[vertex] == self.vertex_colour[neighbour]:
+                    return False
+        return True
+
     def greedy_algo(self,order_deg):
+        """Colour graphs using the greedy algorithm depending on the vertex degree"""
         for x in range(1,self.graph_size +1):
             self.vertex_colour[x]=0
         if order_deg == "l":
             v = self.degree_lowest()
         elif order_deg == "h":
             v = self.degree_highest()
+        elif order_deg == "n":
+            v= range(1,self.graph_size +1)
         for j in range(0, len(v)):
             nb = list(self.edge_list[v[j]])  # place the neighbours in a list
             colour = {}  # empty colour dict
@@ -122,67 +141,10 @@ class Graph():
                     self.vertex_colour[v[j]] = i
                     break
 
-    def random_graph(self، p):
+    def random_graph(self, p):
+        """Generate a random graph"""
         self.clear()
         for v1 in range(1, self.graph_size + 1):
             for v2 in range(v1, self.graph_size + 1):
                 if v1 != v2 and random.random() < p:
                     self.add_edge(v1,v2)
-
-
-    def greedy_algo2(self):
-        """colours graph using the greedy algorithm"""
-        for x in range(1,self.graph_size +1):
-            self.vertex_colour[x]=0
-        for v in range(1, self.order() + 1):
-            nb = list(self.edge_list[v])  # place the neighbours in a list
-            colour = {}  # empty colour dict
-            for i in range(1, self.order() + 1):  # loop to set all colours to be available
-                colour[i] = True
-            # loop checks if all the vertex neighbours have a colour, if they do, the colour is “false” (unavailable)
-            for x in nb:
-                nb_colour = self.vertex_colour[x]
-                if nb_colour != 0:  # if the neighbour has a colour
-                    colour[nb_colour] = False
-                    # change the colour to be not available
-                    # loop to find the first available colour so we will loop till we find the first true
-            for i in range(1, len(colour) + 1):  # find the first available colour
-                if colour[i] is True:
-                    self.vertex_colour[v] = i
-                    break
-    #
-    # def draw(self):
-    #     g = igraph.Graph()
-    #     g.add_vertices(self.order())
-    #     for v in range(1, self.order() + 1):
-    #         for w in range(v + 1, self.order() + 1):
-    #             if w in self.edge_list[v]:
-    #                 g.add_edge(v - 1, w - 1)
-    #     layout = g.layout("kk")
-    #     igraph.plot(g, layout=layout)
-g = Graph(100)
-# g.add_edge(1,3)
-# g.add_edge(1,2)
-# g.add_edge(2,1)
-# g.add_edge(2,3)
-# g.add_edge(2,5)
-# g.add_edge(3,2)
-# g.add_edge(3,4)
-# g.add_edge(3,5)
-# g.add_edge(4,3)
-# g.add_edge(4,5)
-# g.add_edge(5,4)
-# g.add_edge(5,3)
-
-#g.is_empty()
-#g.is_complete()
-# g.draw()
-
-g.random_graph(0.3)
-
-g.greedy_algo("l")
-print("colour count", g.colour_count())
-g.greedy_algo("h")
-print("colour count", g.colour_count())
-g.greedy_algo2()
-print("colour count", g.colour_count())
