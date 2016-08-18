@@ -4,6 +4,7 @@ import igraph
 import operator
 from operator import itemgetter
 import itertools
+import igraph
 
 class graph():
     def __init__(self, n):
@@ -190,3 +191,13 @@ class graph():
             print("can't color")
             return False
         return True
+
+     def draw(self):
+         g = igraph.Graph()
+         g.add_vertices(self.order())
+         for v in range(1, self.order()+1):
+             for w in range(v+1, self.order()+1):
+                 if w in self.edge_list[v]:
+                     g.add_edge(v-1, w-1)
+         layout = g.layout("kk")
+         igraph.plot(g, layout = layout)
