@@ -3,6 +3,8 @@ import collections
 import igraph
 import operator
 from operator import itemgetter
+import itertools
+
 class graph():
     def __init__(self, n):
         self.graph_size = n
@@ -40,7 +42,7 @@ class graph():
         self.edge_cnt=0
 
     def order(self):
-        """Return the number of vertices in the graph"""
+        """Return the number of edges in the graph"""
         return len(self.edge_list)
 
     def size(self):
@@ -67,19 +69,18 @@ class graph():
         return False
 
 
+    def naive_colouring(self):
+        ### random colours but can have duplicates
+        for k in range(1, self.order() + 1):
+            self.vertex_colour[k]=random.randint(0, self.order())
 
-    #def naive_colouring(self):
-        #### random colours but can have duplicates
-        #for k in range(1, self.order() + 1):
-            #self.vertex_colour[k]=random.randint(0, self.order())
-
-        #### vertex colour is added in order from 1 to vertex's number then values are shuffled (no duplicate colours)
-        # for k in range(1, self.order() + 1):
-        #     self.vertex_colour[k] = k
-        # values = list( )
-        # random.shuffle(values)
-        # self.vertex_colour= dict(zip(self.vertex_colour.keys(), values))
-        # print (self.vertex_colour)
+        ### vertex colour is added in order from 1 to vertex's number then values are shuffled (no duplicate colours)
+        for k in range(1, self.order() + 1):
+            self.vertex_colour[k] = k
+        values = list( )
+        random.shuffle(values)
+        self.vertex_colour= dict(zip(self.vertex_colour.keys(), values))
+        print (self.vertex_colour)
 
     def colour_count(self):
         """Count colours in the graph"""
@@ -114,7 +115,8 @@ class graph():
                     return False
         return True
 
-    def greedy_algo(self,order_deg):
+
+    def colour_greedy(self,order_deg):
         """Colour graphs using the greedy algorithm depending on the vertex degree"""
         for x in range(1,self.graph_size +1):
             self.vertex_colour[x]=0
@@ -141,6 +143,8 @@ class graph():
                     self.vertex_colour[v[j]] = i
                     break
 
+
+
     def random_graph(self, p):
         """Generate a random graph"""
         self.clear()
@@ -148,3 +152,41 @@ class graph():
             for v2 in range(v1, self.graph_size + 1):
                 if v1 != v2 and random.random() < p:
                     self.add_edge(v1,v2)
+
+    def colour_brute(self):
+        """colour with brute force algorithm"""
+        min_color = self.order()
+        a = range(1, min_color + 1)
+        for colour in itertools.product(a, repeat=self.order()):
+            self.vertex_colour = dict(zip( self.edge_list.keys(),  colour))
+            if self.is_proper():
+                if self.colour_count() < min_color:
+                    min_colour= self.colour_count()
+                return
+        for x in range(1, self.order() + 1):
+            self.vertex_colour[x] = 0
+
+    def is_safe(self, c, nb):
+        """check if colour is safe"""
+        for x in nb:
+            if self.vertex_colour[x] == c:
+                return False
+        return True
+
+    def gcu(self, m, v):
+        if (v == self.order()+1):
+            return True
+
+        for c in range(1, m + 1):
+            nb = list(self.edge_list[v])
+            if self.is_safe(c, nb):
+                self.vertex_colour[v] = c
+                if self.gcu(m, v + 1) == True:
+                    return True
+        return False
+
+    def colour_backtracking(self, m):
+        if self.gcu(m, 1) == False:
+            print("can't color")
+            return False
+        return True
