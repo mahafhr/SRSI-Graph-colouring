@@ -184,6 +184,7 @@ class graph():
                 self.vertex_colour[v] = c
                 if self.gcu(m, v + 1) == True:
                     return True
+            self.vertex_colour[v] = 0
         return False
 
     def colour_backtracking(self, m):
