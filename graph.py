@@ -4,7 +4,7 @@ import igraph
 import operator
 from operator import itemgetter
 import itertools
-class graph():
+class Graph():
     def __init__(self, n):
         self.graph_size = n
         self.edge_list = {}      # a dictionary where keys are the vertices and the values are the set of neighbours
