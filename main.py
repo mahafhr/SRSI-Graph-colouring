@@ -9,7 +9,7 @@ height = 600
 dot_width = 50
 
 def dist_squared(pair1, pair2):
-    return (pair1[0] - pair2[0])**2 + (pair2[1] - pair2[1])**2
+    return (pair1[0] - pair2[0])**2 + (pair1[1] - pair2[1])**2
 
 
 def nearest_vertex(click, coordinates):
