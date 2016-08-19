@@ -4,8 +4,6 @@ import igraph
 import operator
 from operator import itemgetter
 import itertools
-import igraph
-
 class graph():
     def __init__(self, n):
         self.graph_size = n
