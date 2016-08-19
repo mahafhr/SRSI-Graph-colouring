@@ -4,6 +4,8 @@ import igraph
 import operator
 from operator import itemgetter
 import itertools
+import time
+
 class Graph():
     def __init__(self, n):
         self.graph_size = n
@@ -18,9 +20,9 @@ class Graph():
     def add_edge(self, a, b):
         """ Add edge between the vertices a and b to graph"""
         if a > self.order():
-            print ("Can not add edge because", a, "is not a vetex in the graph.")
+            print "Can not add edge because", a, "is not a vetex in the graph."
         elif b > self.order():
-            print ("Can not add edge because", b, "is not a vetex in the graph.")
+            print "Can not add edge because", b, "is not a vetex in the graph."
         elif a != b:
             self.edge_list[a].add(b)
             self.edge_list[b].add(a)
@@ -29,10 +31,10 @@ class Graph():
     def print_graph(self):
         """Print graph to console"""
         if self.is_empty():
-            print ("Graph is empty!")
+            print "Graph is empty!"
         else:
             for j in range(1, self.graph_size +1):
-                    print ("vertex",j, "neighbours", self.edge_list[j],"colour",self.vertex_colour[j])
+                    print "vertex",j, "neighbours", self.edge_list[j],"colour",self.vertex_colour[j]
 
     def clear(self):
         """Clear sets (edges)"""
@@ -130,7 +132,7 @@ class Graph():
             colour = {}  # empty colour dict
             for i in range(1, self.graph_size + 1):  # loop to set all colours to be available
                 colour[i] = True
-            # loop checks if all the vertex neighbours have a colour, if they do, the colour is “false” (unavailable)
+            # loop checks if all the vertex neighbours have a colour, if they do, the colour is "false" (unavailable)
             for x in nb:
                 nb_colour = self.vertex_colour[x]
                 if nb_colour != 0:  # if the neighbour has a colour
@@ -182,15 +184,15 @@ class Graph():
                 self.vertex_colour[v] = c
                 if self.gcu(m, v + 1) == True:
                     return True
-            self.vertex_colour[v] = 0
+            g.vertex_colour[v]=0
         return False
 
     def colour_backtracking(self, m):
         if self.gcu(m, 1) == False:
-            print("can't color")
+            print"can't color with %d" % (m)
             return False
         return True
-
+        
      def draw(self):
          g = igraph.Graph()
          g.add_vertices(self.order())
