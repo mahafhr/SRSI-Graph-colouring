@@ -91,6 +91,9 @@ class Graph():
             colour_set = set(self.vertex_colour.values()) # colours are a set to remove duplicates, then it gets the len
             return (len(colour_set))
 
+    def clear_colour(self):
+        for vertex in range(1, self.order() + 1):
+            self.vertex_colour[vertex]=0
 
     def degree_lowest(self):
         """Arrange a dict of vertices and edges starting from the lowest degree"""
@@ -144,8 +147,6 @@ class Graph():
                     self.vertex_colour[v[j]] = i
                     break
 
-
-
     def random_graph(self, p):
         """Generate a random graph"""
         self.clear()
@@ -154,18 +155,14 @@ class Graph():
                 if v1 != v2 and random.random() < p:
                     self.add_edge(v1,v2)
 
-    def colour_brute(self):
-        """colour with brute force algorithm"""
-        min_color = self.order()
-        a = range(1, min_color + 1)
-        for colour in itertools.product(a, repeat=self.order()):
-            self.vertex_colour = dict(zip( self.edge_list.keys(),  colour))
-            if self.is_proper():
-                if self.colour_count() < min_color:
-                    min_colour= self.colour_count()
-                return
-        for x in range(1, self.order() + 1):
-            self.vertex_colour[x] = 0
+   def colour_brute(self):
+        for palette_size in range(1, self.order()+1):
+            for assignment in itertools.product(range(1,palette_size), repeat=self.order()):
+                self.vertex_colour = dict(zip(self.edge_list.keys(), assignment))
+                print assignment
+                if self.is_proper():
+                    return
+        print "Complete graph! %d colours needed." %(self.order())
 
     def is_safe(self, c, nb):
         """check if colour is safe"""
