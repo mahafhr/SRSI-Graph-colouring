@@ -4,15 +4,14 @@ import igraph
 import operator
 from operator import itemgetter
 import itertools
-import time
 
 class Graph():
     def __init__(self, n):
         self.graph_size = n
-        self.edge_list = {}      # a dictionary where keys are the vertices and the values are the set of neighbours
-        self.edge_cnt = 0        # number of edges
-        self.vertex_colour = {}
-        self.vertex_degree = {}
+        self.edge_list = {}      # Keys are the vertices and the values are the set of neighbours
+        self.edge_cnt = 0        # Number of edges
+        self.vertex_colour = {}  # Where the colour of each edge is stored
+        self.vertex_degree = {}  # Degree of each vertex
         for x in range(1, n+1):
             self.edge_list[x] = set()
             self.vertex_colour[x] = 0
@@ -36,15 +35,15 @@ class Graph():
             for j in range(1, self.graph_size +1):
                     print "vertex",j, "neighbours", self.edge_list[j],"colour",self.vertex_colour[j]
 
-    def clear(self):
+    def clear_edges(self):
         """Clear sets (edges)"""
         for j in range(1, self.order()+1):
             self.edge_list[j].clear()
         self.edge_cnt=0
 
     def order(self):
-        """Return the number of edges in the graph"""
-        return len(self.edge_list)
+        """return n = number of vertices"""
+        return self.graph_size
 
     def size(self):
         """Return the number of edges in the graph"""
@@ -69,20 +68,6 @@ class Graph():
             return True
         return False
 
-
-    def naive_colouring(self):
-        ### random colours but can have duplicates
-        for k in range(1, self.order() + 1):
-            self.vertex_colour[k]=random.randint(0, self.order())
-
-        ### vertex colour is added in order from 1 to vertex's number then values are shuffled (no duplicate colours)
-        for k in range(1, self.order() + 1):
-            self.vertex_colour[k] = k
-        values = list( )
-        random.shuffle(values)
-        self.vertex_colour= dict(zip(self.vertex_colour.keys(), values))
-        print (self.vertex_colour)
-
     def colour_count(self):
         """Count colours in the graph"""
         if self.vertex_colour[1] == 0:
@@ -94,6 +79,7 @@ class Graph():
     def clear_colour(self):
         for vertex in range(1, self.order() + 1):
             self.vertex_colour[vertex]=0
+
 
     def degree_lowest(self):
         """Arrange a dict of vertices and edges starting from the lowest degree"""
@@ -113,6 +99,7 @@ class Graph():
         return l
 
     def is_proper(self):
+        """Check if graph is coloured properly"""
         for vertex in range(1, self.graph_size + 1):
             for neighbour in self.edge_list[vertex]:
                 if self.vertex_colour[vertex] == self.vertex_colour[neighbour]:
@@ -147,19 +134,21 @@ class Graph():
                     self.vertex_colour[v[j]] = i
                     break
 
+
+
     def random_graph(self, p):
         """Generate a random graph"""
-        self.clear()
+        self.clear_edges()
         for v1 in range(1, self.graph_size + 1):
             for v2 in range(v1, self.graph_size + 1):
                 if v1 != v2 and random.random() < p:
                     self.add_edge(v1,v2)
 
-   def colour_brute(self):
+    def colour_brute(self):
+        """Colours graph using the Brute Force algorithm"""
         for palette_size in range(1, self.order()+1):
             for assignment in itertools.product(range(1,palette_size), repeat=self.order()):
                 self.vertex_colour = dict(zip(self.edge_list.keys(), assignment))
-                print assignment
                 if self.is_proper():
                     return
         print "Complete graph! %d colours needed." %(self.order())
@@ -171,7 +160,7 @@ class Graph():
                 return False
         return True
 
-    def gcu(self, m, v):
+    def backtracking(self, m, v):
         if (v == self.order()+1):
             return True
 
@@ -179,23 +168,15 @@ class Graph():
             nb = list(self.edge_list[v])
             if self.is_safe(c, nb):
                 self.vertex_colour[v] = c
-                if self.gcu(m, v + 1) == True:
+                if self.backtracking(m, v + 1) == True:
                     return True
-            self.vertex_colour[v]=0
+            g.vertex_colour[v]=0
         return False
 
     def colour_backtracking(self, m):
-        if self.gcu(m, 1) == False:
-            print"can't color with %d" % (m)
+        """Call this function to colour graph using the Backtracking Recursive Algorithm """
+        if self.backtracking(m, 1) == False:
+            print"can't color with %d colours" % (m)
             return False
         return True
 
-    def draw(self):
-         g = igraph.Graph()
-         g.add_vertices(self.order())
-         for v in range(1, self.order()+1):
-             for w in range(v+1, self.order()+1):
-                 if w in self.edge_list[v]:
-                     g.add_edge(v-1, w-1)
-         layout = g.layout("kk")
-         igraph.plot(g, layout = layout)
