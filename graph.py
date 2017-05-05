@@ -1,6 +1,5 @@
 import random
 import collections
-import igraph
 import operator
 from operator import itemgetter
 import itertools
